@@ -3,7 +3,7 @@
   <section class="src-components-navigator">
     <div class="nav">
       <button id="reset" @click="resetear()">{{ messageRestart }}</button>
-      <span class="mensaje"> {{ message }} </span>
+      <span class="mensaje"> {{ $store.state.mensaje }} </span>
 
       <button id="easy" :class="!isHard" @click="buttonEasy()">easy</button>
       <button id="hard" :class="isHard" @click="buttonHard()">hard</button>
@@ -20,69 +20,36 @@
   export default  {
     name: 'src-components-navigator',
     props: [],
+    beforeMount () {
+      this.buttonHard()
+    },
     mounted() {
-      this.createbuttons(this.colorCount)
+      
     },
     components: {
       Container
     },
     data () {
       return {
-        isHard: true,
-        buttons: [],
-        colorCount: 6,
-        hardColor: 6,
-        easyColor: 3,
-        pickedColor: "",
-        message: "",
         messageRestart: "New Colors!"
       }
     },
     methods: {
-      createbuttons(n) {
-        var arr = [];
-        for (var i = 0; i < n; i++) {
-          arr.push(this.createRandomStringColor());
-        }
-        this.buttons = arr
-        this.pickedColor = arr[Math.floor(Math.random() * this.colorCount)]
-        this.$emit("picked-color", this.pickedColor)
-      },
-      buttonHard() {
-        if (!this.isHard) {
-          this.isHard = true
-          this.colorCount = this.hardColor;
-          this.resetear()
-        }
-      },
+
       buttonEasy() {
-        if (this.isHard) {
-          this.isHard = false
-          this.colorCount = this.easyColor;
-          this.resetear()
-        }
+        this.$store.dispatch("buttonEasy")
       },
-      createRandomStringColor(){
-        var newColor = "rgb(" + this.randomNumber() + ", " + this.randomNumber() + ", " + this.randomNumber() + ")" ;
-        return newColor;
+
+      buttonHard() {
+        this.$store.dispatch("buttonHard")
       },
-      randomNumber(){
-        return Math.floor(Math.random() * 256);
-      },
+
       resetear() {
-        this.createbuttons(this.colorCount)
-        this.$emit('color-correcto', "steelblue")
-        this.message = ""
-      },
+        this.$store.dispatch("restart")
+      }, 
+
       setAllColorsTo(color) {
-        let arr = []
-        for (let i = 0; i < this.buttons.length; i++) {
-          arr[i] = color
-        }
-        this.buttons = arr
-        this.message = "You Picked Right!"
-        this.restartMessage = "Try Again!"
-        this.$emit('color-correcto', color)
+        this.$store.dispatch("changeColorsTo", color)
       },
     },
     computed: {

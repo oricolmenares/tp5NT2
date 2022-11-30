@@ -2,7 +2,7 @@
 
   <section class="src-components-container">
     <div class="main-container">
-      <div class="box" v-for="(color, index) in squares" v-bind:key="index" 
+      <div class="box" v-for="(color, index) in buttons" v-bind:key="index" 
         :style="{'background': color}" @click="validate(color, index)">
       </div>
     </div>
